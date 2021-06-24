@@ -7,17 +7,17 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_PCD8544.h"
 #include "util/delay.h"
+#include "bitset.h"
 
 #define PIN_TRIG 10
 #define PIN_ECHO 11
 #define GPS_BAUD 9600
 #define BLUETOOTH_BAUD 9600
-#define PERMITTED_PROXIMITY 0.4
 #define CLICKS_PER_METER 3500
 #define CLICKS_PER_LEFT_ROTATION 1350
-#define CLICKS_PER_RIGHT_ROTATION 1500
-#define FIELD_LENGTH 1.0
-#define FIELD_WIDTH 1.0
+#define CLICKS_PER_RIGHT_ROTATION 1540
+#define COL_NUMBER 4
+#define ROW_NUMBER 4
 #define CALIBRATION_DURATION 3000
 #define HIGH_FREQUENCY 14.0
 #define COIL_DIAMETER 0.3
@@ -91,6 +91,7 @@ class chassis {
       for (int i = 0; i < N; i++)
         _right[i].forward();
     }
+    
     void right() const {
       for (int i = 0; i < N; i++)
         _left[i].forward();
@@ -121,7 +122,7 @@ Adafruit_PCD8544 _display(37, 39, 41, 43, 45);
 L298N_motor left[3] = {{9, 31, 29}, {4, 40, 42}, {8, 25, 27}};
 L298N_motor right[3] = {{6, 28, 30}, {5, 36, 38}, {7, 26, 24}};
 chassis<L298N_motor, 3> _chassis(left, right);
-
+bitset<COL_NUMBER> used[ROW_NUMBER];
 volatile long encoder = 0, v0 = 0, t = 0;
 volatile float f = 0; //разница между эталонной (v0) и текущей частотой (t)
 
@@ -157,9 +158,9 @@ bool distance_check() {
   _delay_us(10);
   digitalWrite(PIN_TRIG, LOW);
 
-  const float koef = 0.000159; //коэффициент зависимости расстояния от времени
+  static const float koef = 0.000159; //коэффициент зависимости расстояния от времени
   float distance = koef * pulseIn(PIN_ECHO, HIGH);
-  return (distance < PERMITTED_PROXIMITY);
+  return (distance >= COIL_DIAMETER);
 }
 
 bool md_check() {
@@ -178,7 +179,7 @@ void turn_left() {
   while (abs(encoder) < CLICKS_PER_LEFT_ROTATION)
     _chassis.left();
   _chassis.stop();
-  _delay_ms(400);
+  _delay_ms(600);
 }
 
 void turn_right() {
@@ -186,20 +187,44 @@ void turn_right() {
   while (abs(encoder) < CLICKS_PER_RIGHT_ROTATION)
     _chassis.right();
   _chassis.stop();
-  _delay_ms(400);
+  _delay_ms(600);
 }
 
-void forward(float distance) {
+void forward() {
   encoder = 0;
-  long prev_encoder = INT_MIN;
-  while (abs(encoder) < dist_to_clicks(distance)) {
-    if (abs(encoder) - prev_encoder > dist_to_clicks(COIL_DIAMETER))
-      if (md_check())
-        prev_encoder = abs(encoder);
+  while (abs(encoder) < dist_to_clicks(COIL_DIAMETER)) 
     _chassis.forward();
-  }
   _chassis.stop();
-  _delay_ms(400);
+  _delay_ms(600);
+}
+
+void back() {
+  encoder = 0;
+  while (abs(encoder) < dist_to_clicks(COIL_DIAMETER)) 
+    _chassis.back();
+  _chassis.stop();
+  _delay_ms(600);
+}
+
+inline bool inside(int row, int col) {
+  return row >= 0 && row < ROW_NUMBER && col >= 0 && col < COL_NUMBER;
+}
+
+void dfs(int row, int col, int rotation) {
+  static const int drow[4] = {1, 0, -1, 0}, dcol[4] = {0, 1, 0, -1};
+    
+  md_check();
+  used[row].set_bit(col, true);
+  for(int i = 0; i < 4; i++) {
+    int ind = (rotation + i) % 4;
+    int rto = row + drow[ind], cto = col + dcol[ind];
+    if(inside(rto, cto) && !used[rto].get_bit(cto) && distance_check()) {
+      forward();
+      dfs(rto, cto, ind);
+    }
+    turn_right();
+  }
+  back();
 }
 
 SIGNAL(TIMER5_COMPA_vect) {
@@ -243,21 +268,12 @@ void setup() {
   _delay_ms(CALIBRATION_DURATION);
   v0 = t; f = 0;
 
-  while (!gps.location.isValid())
+  /*while (!gps.location.isValid())
     while (Serial1.available())
-      gps.encode(Serial1.read());
+      gps.encode(Serial1.read());*/
+
+  dfs(0, 0, 0);
 }
 
 void loop() {
-  static float processed_width = 0;
-  static bool turn_is_right = true;
-
-  if (processed_width < FIELD_WIDTH) {
-    forward(FIELD_LENGTH);
-    (turn_is_right) ? turn_right() : turn_left();
-    forward(COIL_DIAMETER);
-    (turn_is_right) ? turn_right() : turn_left();
-    processed_width += COIL_DIAMETER;
-    turn_is_right = !turn_is_right;
-  }
 }
