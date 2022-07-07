@@ -9,10 +9,11 @@ The rectangle is divided into cells, in each of which the robot looks in 4 direc
 depending on the readings of the distance sensor (**HC-SR04**), decides whether it is possible 
 to go in one direction or another. Three **L298N** drivers are used to control the motors.
 In order for the robot to turn exactly at a certain angle, a high-precision optical encoder 
-installed on one of the motors. 
+installed on one of the motors.
 <p float="left">
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_1.jpg?raw=true" alt="drawing" width="350"/>
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_4.jpg?raw=true" alt="drawing" width="350"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_1.jpg?raw=true" alt="drawing" width="300"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_4.jpg?raw=true" alt="drawing" width="300"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Rocker_bogie.gif?raw=true" alt="drawing" width="300"/>
 </p>
 
 ### Circuit diagram
@@ -25,4 +26,3 @@ Such a simple representation is enough to understand how everything wired. Every
 Specific pin numbers are not so important, but they can be viewed in the code if it is very necessary. 
 The diagram of the metal detector was taken from this 
 [website](http://dzlsevilgeniuslair.blogspot.com/2013/07/diy-arduino-based-metal-detector.html).
-
