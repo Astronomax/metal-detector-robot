@@ -35,6 +35,6 @@ but they are not shown in the diagram.
 </p>
 
 ### Dependencies
-- [TinyGPS++](https://github.com/mikalhart/TinyGPSPlus) - NEO6M GPS data parser 
-- [Adafruit_GFX](https://github.com/adafruit/Adafruit-GFX-Library) - Display for duplicating information
-- [Adafruit_PCD8544](https://github.com/adafruit/Adafruit-PCD8544-Nokia-5110-LCD-library) - Display for duplicating information 
+- [TinyGPS++](https://github.com/mikalhart/TinyGPSPlus)
+- [Adafruit_GFX](https://github.com/adafruit/Adafruit-GFX-Library)
+- [Adafruit_PCD8544](https://github.com/adafruit/Adafruit-PCD8544-Nokia-5110-LCD-library) 
