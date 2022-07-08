@@ -13,14 +13,14 @@ to go in one direction or another. Three **L298N** drivers used to control the m
 In order for the robot to turn exactly at a certain angle, a high-precision optical encoder 
 installed on one of the motors.
 <p float="left">
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_1.jpg?raw=true" alt="drawing" width="300"/>
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_4.jpg?raw=true" alt="drawing" width="300"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_1.jpg?raw=true" alt="drawing" width="350"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/photos/IMG_20220707_4.jpg?raw=true" alt="drawing" width="350"/>
 </p>
 
 ### Circuit diagram
 <p float="left">
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/full_scheme.jpg?raw=true" alt="drawing" width="300"/>
-  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/md_scheme.jpg?raw=true" alt="drawing" width="300"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/full_scheme.jpg?raw=true" alt="drawing" width="350"/>
+  <img src="https://github.com/Astronomax/metal-detector-robot/blob/main/md_scheme.jpg?raw=true" alt="drawing" width="350"/>
 </p>
 
 Such a simple representation is enough to understand how everything wired. Everything powered in parallel. 
