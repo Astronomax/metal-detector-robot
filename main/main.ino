@@ -1,13 +1,13 @@
 //author:  astronomax
 
-#include "Wire.h"
+#include "util/delay.h"
+
 #include "L298N.h"
-#include "Thread.h"
+#include "bitset.h"
+
 #include "TinyGPS++.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_PCD8544.h"
-#include "util/delay.h"
-#include "bitset.h"
 
 #define PIN_TRIG 10
 #define PIN_ECHO 11
